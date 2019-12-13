@@ -1,0 +1,19 @@
+{
+ "name": "grammar-bot",
+ "version": "1.0.0",
+ "description": "Better have an end puctuation",
+ "main": "bot.js",
+ "author": "Ricky Lyons",
+ "scripts": {
+  "start": "node bot.js",
+  "dev": "nodemon bot.js"
+ },
+ "dependencies": {
+  "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+  "discord.js": "^11.5.1",
+  "winston": "^3.2.1"
+ },
+ "devDependencies": {
+  "nodemon": "^2.0.2"
+ }
+}
