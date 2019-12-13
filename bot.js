@@ -9,10 +9,12 @@ client.on('ready', () => {
 
 var punctuation = [ ".", "?", "!", ")"]
 var kickWords = ["codie"]
-var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick"]
+var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick", "deadass"]
 var containSwear
 var notSentence
 var byBot
+
+function isChar (str) { if (str.match(/[a-z|A-Z|0-9]/i)) { return true; } return false; }
 
 client.on('message', msg => 
 {
@@ -42,6 +44,8 @@ client.on('message', msg =>
 					// !ping
 					case 'ping':
 						msg.reply('Pong?')
+							.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+							.catch(console.error);
 						break;
 					// Just add any case commands if you want to..
 				}
@@ -62,9 +66,26 @@ client.on('message', msg =>
 			else if (message.substring(0,1) == '!')
 			{
 			}
+			else if (message.startsWith("<:"))
+			{
+			}
+			else if (!isChar(message))
+			{
+			}
 			else
 			{
 				notSentence = false
+			}
+			
+			if (msg.type == "GUILD_MEMBER_JOIN")
+			{
+				var weary = msg.client.emojis.find(emoji => emoji.name == "weary");
+				if (weary)
+				{
+					msg.react(weary.id)
+						.then(console.log)
+						.catch(console.error);
+				}
 			}
 			
 			swears.forEach(containsSwearWord)
@@ -74,11 +95,29 @@ client.on('message', msg =>
 
 				if (lower.includes(item))
 				{
-					letter = item.substring(0,1).toUpperCase()
-					msg.reply(`That is not appropriate language. Do not use the ${letter}-word in here.`)
-					msg.delete()
-					msg.deleted = true
+					if (!(lower == item))
+					{
+						var index = lower.indexOf(item)
+						if (!isChar(lower.charAt(index - 1)))
+						{
+							flagFoulLanguage(item)
+						}
+					}
+					else
+					{
+						flagFoulLanguage(item)
+					}
 				}
+			}
+			
+			function flagFoulLanguage(item)
+			{
+				letter = item.substring(0,1).toUpperCase()
+				msg.reply(`That is not appropriate language. Do not use the ${letter}-word in here.`)
+					.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+					.catch(console.error);
+				msg.delete()
+				msg.deleted = true
 			}
 			
 			if (!notSentence && msg.deleted == false)
@@ -89,6 +128,8 @@ client.on('message', msg =>
 				{
 					msg.delete()
 					msg.reply("You must finish your sentences with punctuation.")
+						.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+						.catch(console.error);
 				}
 			}
 		}
