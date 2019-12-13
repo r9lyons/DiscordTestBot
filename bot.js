@@ -6,7 +6,6 @@ const botTokk = auth.token
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`)
 })
-
 var punctuation = [ ".", "?", "!", ")"]
 var kickWords = ["codie"]
 var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick"]
