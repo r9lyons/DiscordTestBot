@@ -21,7 +21,7 @@ client.on('message', msg =>
 		{
 			var channel = msg.channel
 			var message = msg.content
-			notSentence = false
+			notSentence = true
 			kickWords.forEach(kickCheck)
 			function kickCheck(item)
 			{
@@ -35,7 +35,6 @@ client.on('message', msg =>
 			}
 			if (message.substring(0,1) == '?')
 			{
-				notSentence = true
 				var args = message.substring(1).split(' ');
 				var cmd = args[0];
 				switch(cmd) 
@@ -47,27 +46,25 @@ client.on('message', msg =>
 					// Just add any case commands if you want to..
 				}
 			}
-			
-			if (msg.mentions.channels.array().length > 0 || msg.mentions.members.array().length > 0 || msg.mentions.roles.array().length > 0
+			else if (msg.mentions.channels.array().length > 0 || msg.mentions.members.array().length > 0 || msg.mentions.roles.array().length > 0
 				|| msg.mentions.users.array().length > 0 || msg.mentions.everyone == true)
 			{
-				notSentence = true
 			}
-			if (message.includes("https://") || message.includes("http://"))
+			else if (message.includes("https://") || message.includes("http://"))
 			{
-				notSentence = true
 			}
-			if (msg.attachments.array().length > 0)
+			else if (msg.attachments.array().length > 0)
 			{
-				notSentence = true
 			}
-			if (msg.type != "DEFAULT")
+			else if (msg.type != "DEFAULT")
 			{
-				notSentence = true
 			}
-			if (message.substring(0,1) == '!')
+			else if (message.substring(0,1) == '!')
 			{
-				notSentence = true
+			}
+			else
+			{
+				notSentence = false
 			}
 			
 			swears.forEach(containsSwearWord)
