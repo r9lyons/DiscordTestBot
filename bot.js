@@ -94,7 +94,6 @@ client.on('message', msg =>
 					msg.reply("You must finish your sentences with punctuation.")
 				}
 			}
-			
 		}
 	}
 	catch (e) 
