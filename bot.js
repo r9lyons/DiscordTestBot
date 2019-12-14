@@ -36,6 +36,7 @@ client.on('message', msg =>
 					notSentence = true
 					msg.delete()
 					msg.reply("has spoken the words never to be spoken...")
+					msg.deleted = true
 				}
 			}
 			
