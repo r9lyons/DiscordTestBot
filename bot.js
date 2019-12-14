@@ -13,7 +13,8 @@ client.on('ready', () => {
 
 var punctuation = [ ".", "?", "!", ")"]
 var kickWords = ["codie"]
-var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick", "deadass", "chucklefuck", "retard", "thundercunt", "knucklefuck", "horseshit"]
+var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick", "deadass",
+	"chucklefuck", "retard", "thundercunt", "knucklefuck", "horseshit", "motherfucker"]
 var questionWords = ["who", "what", "where", "when are", "when is", "when will", "when do", "why", "how", "whose", "is", "will"]
 var insults = ["you fucking suck", "you. are. shit", "fuck off", "you should have been a stain on your parents bed sheets", "coward"]
 var admins = ["Cyb3rLi0n", "Rockendude"]
@@ -35,62 +36,24 @@ function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min) ) + min;
 }
 
+//handle any foul language found
+function flagFoulLanguage(item, msg)
+{
+	letter = item.substring(0,1).toUpperCase()
+	msg.reply(`That is not appropriate language. Do not use the ${letter}-word in here.`)
+		.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
+		.catch(console.error);
+	msg.delete()
+	msg.deleted = true
+}
+
 function isSentence(msg)
 {
 	message = msg.content
 	// Check for bot commands
 	if (message.substring(0,1) == '?')
 	{
-		var args = message.substring(1).split(' ');
-		var cmd = args[0];
-		switch(cmd) 
-		{
-			// ?ping
-			case 'ping':
-			{
-				msg.reply('Pong?')
-					.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
-					.catch(console.error);
-				break;
-			}
-			case 'bash':
-			{
-				if (msg.mentions.users.find('username', botName) == null)
-				{
-					bash(args[1])
-				}
-				else
-				{
-					msg.reply("I will not do that to myself.")
-						.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
-						.catch(console.error);
-				}
-				break;
-			}
-			case 'togglegrammar':
-			{
-				if (admins.find(admin => admin === msg.author.username) != null)
-				{
-					grammarBool = !grammarBool
-					msg.reply(`Toggling grammar. Now set to: ${grammarBool}`) // add current boolean to output
-						.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
-						.catch(console.error);
-				}
-				break;
-			}
-			case 'togglecensorship':
-			{
-				if (admins.find(admin => admin === msg.author.username) != null)
-				{
-					censorshipBool = !censorshipBool
-					msg.reply(`Toggling censorship. Now set to: ${censorshipBool}`) // add current boolean to output
-						.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
-						.catch(console.error);
-				}
-				break;
-			}
-			// Just add any case commands if you want to..
-		}
+		runCommand(msg)
 	}
 	// Check for a mention
 	else if (msg.mentions.channels.array().length > 0 || msg.mentions.members.array().length > 0 || msg.mentions.roles.array().length > 0
@@ -128,6 +91,60 @@ function isSentence(msg)
 	return false
 }
 
+function runCommand(msg)
+{
+	var args = msg.content.substring(1).split(' ')
+	var cmd = args[0];
+	switch(cmd) 
+	{
+		// ?ping
+		case 'ping':
+		{
+			msg.reply('Pong?')
+				.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
+				.catch(console.error);
+			break;
+		}
+		case 'bash':
+		{
+			if (msg.mentions.users.find('username', botName) == null)
+			{
+				bash(args[1])
+			}
+			else
+			{
+				msg.reply("I will not do that to myself.")
+					.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
+					.catch(console.error);
+			}
+			break;
+		}
+		case 'togglegrammar':
+		{
+			if (admins.find(admin => admin === msg.author.username) != null)
+			{
+				grammarBool = !grammarBool
+				msg.reply(`Toggling grammar. Now set to: ${grammarBool}`)
+					.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
+					.catch(console.error);
+			}
+			break;
+		}
+		case 'togglecensorship':
+		{
+			if (admins.find(admin => admin === msg.author.username) != null)
+			{
+				censorshipBool = !censorshipBool
+				msg.reply(`Toggling censorship. Now set to: ${censorshipBool}`)
+					.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
+					.catch(console.error);
+			}
+			break;
+		}
+		// Just add any case commands if you want to..
+	}
+}
+
 client.on('message', msg => 
 {
 	try {
@@ -153,14 +170,44 @@ client.on('message', msg =>
 				}
 			}
 			
-			// Check for anything that doesn't need end punctuation
-			notSentence = !isSentence(msg)
+			//checks for end punctuation, if grammar is turned on
+			if (grammarBool)
+			{
+				if (isSentence(msg) && msg.deleted == false)
+				{
+					var lastChar = message.charAt(message.length - 1)
+					var question = false
+					questionWords.forEach(function (element){ if(message.startsWith(element)){question = true}});
+					if (!question || lastChar == '?')
+					{
+						var index = punctuation.indexOf(lastChar)
+						if (index == -1)
+						{
+							msg.reply("You really should finish your sentences with punctuation.")
+								.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
+								.catch(console.error);
+						}
+					}
+					else
+					{
+						msg.reply("That was a question, it needs to end with a question mark.")
+							.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
+							.catch(console.error);
+					}
+					
+				}
+			}
+			else
+			{
+				if (message.substring(0,1) == '?')
+				{
+						runCommand(msg)
+				}
+			}
 			
 			//Don't let people @ Tannerith
 			if (msg.mentions.users.find(val => val.username === 'Tannerith') != null)
 			{
-				msg.delete()
-				msg.deleted = true
 				msg.reply("We don't like talking to them.")
 					.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 					.catch(console.error);
@@ -174,63 +221,28 @@ client.on('message', msg =>
 					.catch(console.error);
 			}
 			
-			//Check for swear words in message
-			swears.forEach(containsSwearWord)
-			function containsSwearWord(item)
+			//Check for swear words in message, if censorship is turned on
+			if (censorshipBool)
 			{
-				if (message.includes(item))
+				swears.forEach(containsSwearWord)
+				function containsSwearWord(item)
 				{
-					if (!(message == item))
+					if (message.includes(item))
 					{
-						var index = message.indexOf(item)
-						if (!isChar(message.charAt(index - 1)))
+						if (!(message == item))
 						{
-							flagFoulLanguage(item)
+							var index = message.indexOf(item)
+							if (!isChar(message.charAt(index - 1)))
+							{
+								flagFoulLanguage(item, msg)
+							}
+						}
+						else
+						{
+							flagFoulLanguage(item, msg)
 						}
 					}
-					else
-					{
-						flagFoulLanguage(item)
-					}
 				}
-			}
-			
-			//handle any foul language found
-			function flagFoulLanguage(item)
-			{
-				letter = item.substring(0,1).toUpperCase()
-				msg.reply(`That is not appropriate language. Do not use the ${letter}-word in here.`)
-					.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
-					.catch(console.error);
-				msg.delete()
-				msg.deleted = true
-			}
-			
-			//checks for end punctuation
-			if (!notSentence && msg.deleted == false)
-			{
-				var lastChar = message.charAt(message.length - 1)
-				var question = false
-				questionWords.forEach(function (element){ if(message.startsWith(element)){question = true}});
-				if (!question || lastChar == '?')
-				{
-					var index = punctuation.indexOf(lastChar)
-					if (index == -1)
-					{
-						msg.delete()
-						msg.reply("You must finish your sentences with punctuation.")
-							.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
-							.catch(console.error);
-					}
-				}
-				else
-				{
-					msg.delete()
-					msg.reply("That was a question, it needs to end with a question mark.")
-						.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
-						.catch(console.error);
-				}
-				
 			}
 		}
 	}
