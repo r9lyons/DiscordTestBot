@@ -1,5 +1,5 @@
 {
- "name": "grammar-bot",
+ "name": "Grammar test",
  "version": "1.0.0",
  "description": "Better have an end puctuation",
  "main": "bot.js",

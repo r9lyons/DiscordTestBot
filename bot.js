@@ -1,7 +1,9 @@
 const Discord = require('discord.js')
 const client = new Discord.Client()
 const auth = require('./auth.json');
+const readJson = require('./package.json')
 const botTokk = auth.token
+const botName = readJson.name
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`)
@@ -9,13 +11,24 @@ client.on('ready', () => {
 
 var punctuation = [ ".", "?", "!", ")"]
 var kickWords = ["codie"]
-var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick", "deadass"]
+var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick", "deadass", "chucklefuck", "retard", "thundercunt", "knucklefuck", "horseshit"]
 var questionWords = ["who", "what", "where", "when are", "when is", "when will", "when do", "why", "how", "whose", "is", "will"]
+var insults = ["you fucking suck", "you. are. shit", "fuck off", "you should have been a stain on your parents bed sheets", "coward"]
 var containSwear
 var notSentence
 var byBot
+var channel
 
 function isChar (str) { if (str.match(/[a-z|A-Z|0-9]/i)) { return true; } return false; }
+
+function bash (username)
+{
+	channel.send(`${username}, ${insults[getRandomInteger(0,4)]}!`)
+}
+
+function getRandomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min) ) + min;
+}
 
 function isSentence(msg)
 {
@@ -27,12 +40,28 @@ function isSentence(msg)
 		var cmd = args[0];
 		switch(cmd) 
 		{
-			// !ping
+			// ?ping
 			case 'ping':
+			{
 				msg.reply('Pong?')
 					.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
 					.catch(console.error);
 				break;
+			}
+			case 'bash':
+			{
+				if (msg.mentions.users.find('username', botName) == null)
+				{
+					bash(args[1])
+				}
+				else
+				{
+					msg.reply("I will not do that to myself.")
+						.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+						.catch(console.error);
+				}
+				break;
+			}
 			// Just add any case commands if you want to..
 		}
 	}
@@ -77,7 +106,7 @@ client.on('message', msg =>
 	try {
 		if (msg.author.bot == false)
 		{
-			var channel = msg.channel
+			channel = msg.channel
 			var message = msg.content.toLowerCase()
 			notSentence = true
 			
@@ -91,6 +120,8 @@ client.on('message', msg =>
 					notSentence = true
 					msg.delete()
 					msg.reply("has spoken the words never to be spoken...")
+						.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+						.catch(console.error);
 					msg.deleted = true
 				}
 			}
@@ -98,12 +129,14 @@ client.on('message', msg =>
 			// Check for anything that doesn't need end punctuation
 			notSentence = !isSentence(msg)
 			
-			//Don't let people @ Rockendude
-			if (msg.mentions.users.find(val => val.username === 'Rockendude') != null)
+			//Don't let people @ Tannerith
+			if (msg.mentions.users.find(val => val.username === 'Tannerith') != null)
 			{
 				msg.delete()
 				msg.deleted = true
 				msg.reply("We don't like talking to them.")
+					.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+					.catch(console.error);
 			}
 			
 			//react with weary when someone joins server
