@@ -112,14 +112,12 @@ client.on('message', msg =>
 			swears.forEach(containsSwearWord)
 			function containsSwearWord(item)
 			{
-				var lower = message.toLowerCase()
-
-				if (lower.includes(item))
+				if (message.includes(item))
 				{
-					if (!(lower == item))
+					if (!(message == item))
 					{
-						var index = lower.indexOf(item)
-						if (!isChar(lower.charAt(index - 1)))
+						var index = message.indexOf(item)
+						if (!isChar(message.charAt(index - 1)))
 						{
 							flagFoulLanguage(item)
 						}
