@@ -6,6 +6,8 @@ const botTokk = auth.token
 const botName = readJson.name
 
 client.on('ready', () => {
+	censorshipBool = false
+	languageBool = false
 	console.log(`Logged in as ${client.user.tag}!`)
 })
 
@@ -14,10 +16,13 @@ var kickWords = ["codie"]
 var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick", "deadass", "chucklefuck", "retard", "thundercunt", "knucklefuck", "horseshit"]
 var questionWords = ["who", "what", "where", "when are", "when is", "when will", "when do", "why", "how", "whose", "is", "will"]
 var insults = ["you fucking suck", "you. are. shit", "fuck off", "you should have been a stain on your parents bed sheets", "coward"]
+var admins = ["Cyb3rLi0n", "Rockendude"]
 var containSwear
 var notSentence
 var byBot
 var channel
+var grammarBool
+var censorshipBool
 
 function isChar (str) { if (str.match(/[a-z|A-Z|0-9]/i)) { return true; } return false; }
 
@@ -44,7 +49,7 @@ function isSentence(msg)
 			case 'ping':
 			{
 				msg.reply('Pong?')
-					.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+					.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 					.catch(console.error);
 				break;
 			}
@@ -57,14 +62,31 @@ function isSentence(msg)
 				else
 				{
 					msg.reply("I will not do that to myself.")
-						.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+						.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 						.catch(console.error);
 				}
 				break;
 			}
 			case 'togglegrammar':
 			{
-				msg.reply("Toggling grammar.")
+				if (admins.find(admin => admin === msg.author.username) != null)
+				{
+					grammarBool = !grammarBool
+					msg.reply(`Toggling grammar. Now set to: ${grammarBool}`) // add current boolean to output
+						.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
+						.catch(console.error);
+				}
+				break;
+			}
+			case 'togglecensorship':
+			{
+				if (admins.find(admin => admin === msg.author.username) != null)
+				{
+					censorshipBool = !censorshipBool
+					msg.reply(`Toggling censorship. Now set to: ${censorshipBool}`) // add current boolean to output
+						.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
+						.catch(console.error);
+				}
 				break;
 			}
 			// Just add any case commands if you want to..
@@ -125,7 +147,7 @@ client.on('message', msg =>
 					notSentence = true
 					msg.delete()
 					msg.reply("has spoken the words never to be spoken...")
-						.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+						.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 						.catch(console.error);
 					msg.deleted = true
 				}
@@ -140,7 +162,7 @@ client.on('message', msg =>
 				msg.delete()
 				msg.deleted = true
 				msg.reply("We don't like talking to them.")
-					.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+					.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 					.catch(console.error);
 			}
 			
@@ -178,7 +200,7 @@ client.on('message', msg =>
 			{
 				letter = item.substring(0,1).toUpperCase()
 				msg.reply(`That is not appropriate language. Do not use the ${letter}-word in here.`)
-					.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+					.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 					.catch(console.error);
 				msg.delete()
 				msg.deleted = true
@@ -197,7 +219,7 @@ client.on('message', msg =>
 					{
 						msg.delete()
 						msg.reply("You must finish your sentences with punctuation.")
-							.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+							.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 							.catch(console.error);
 					}
 				}
@@ -205,7 +227,7 @@ client.on('message', msg =>
 				{
 					msg.delete()
 					msg.reply("That was a question, it needs to end with a question mark.")
-						.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+						.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 						.catch(console.error);
 				}
 				
