@@ -1,0 +1,14 @@
+Complete
+1. Swear
+2. Kick words
+3. End punctuation
+	- Not checked for @s, emojis, links, attachments, or special messages
+	- Checks if the text is an obvious question then it needs to end in '?'
+4. Commands
+	- Ping
+	- Bash
+
+
+
+
+Ideas
