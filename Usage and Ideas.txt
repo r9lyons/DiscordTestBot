@@ -15,3 +15,9 @@ Ideas
 1. ?playasong
 	-sends "!play https://youtu.be/dQw4w9WgXcQ" in preferably beep boop chat.
 	-perhaps even have a list of urls that go to songs and it chooses one at random.
+2. ?togglegrammar
+	-Flips a boolean value making the bot become a grammar nazi or disabling grammar nazi.
+	-Make command only available to us somehow.
+	-This makes it so we don't have to toss or comment out all the work already done.
+3. ?togglelanguage or ?togglecensorship
+	-Same as ?togglegrammar except for the swearing.
