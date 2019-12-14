@@ -21,3 +21,6 @@ Ideas
 	-This makes it so we don't have to toss or comment out all the work already done.
 3. ?togglelanguage or ?togglecensorship
 	-Same as ?togglegrammar except for the swearing.
+
+Comments
+1. It's getting to the point where we really need to start using more OO to better organize how the bot works fundamentally.
