@@ -12,3 +12,6 @@ Complete
 
 
 Ideas
+1. ?playasong
+	-sends "!play https://youtu.be/dQw4w9WgXcQ" in preferably beep boop chat.
+	-perhaps even have a list of urls that go to songs and it chooses one at random.
