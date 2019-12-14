@@ -10,12 +10,67 @@ client.on('ready', () => {
 var punctuation = [ ".", "?", "!", ")"]
 var kickWords = ["codie"]
 var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick", "deadass"]
-var questionWords = ["who", "what", "where", "why", "how", "whose"]
+var questionWords = ["who", "what", "where", "when are", "when is", "when will", "when do", "why", "how", "whose", "is", "will"]
 var containSwear
 var notSentence
 var byBot
 
 function isChar (str) { if (str.match(/[a-z|A-Z|0-9]/i)) { return true; } return false; }
+
+function isSentence(msg)
+{
+	message = msg.content
+	// Check for bot commands
+	if (message.substring(0,1) == '?')
+	{
+		var args = message.substring(1).split(' ');
+		var cmd = args[0];
+		switch(cmd) 
+		{
+			// !ping
+			case 'ping':
+				msg.reply('Pong?')
+					.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+					.catch(console.error);
+				break;
+			// Just add any case commands if you want to..
+		}
+	}
+	// Check for a mention
+	else if (msg.mentions.channels.array().length > 0 || msg.mentions.members.array().length > 0 || msg.mentions.roles.array().length > 0
+		|| msg.mentions.users.array().length > 0 || msg.mentions.everyone == true)
+	{
+	}
+	// Check for a hyperlink
+	else if (message.includes("https://") || message.includes("http://"))
+	{
+	}
+	// Check for an attachment
+	else if (msg.attachments.array().length > 0)
+	{
+	}
+	// Check for any atypical message
+	else if (msg.type != "DEFAULT")
+	{
+	}
+	// Check for command for other bot
+	else if (message.substring(0,1) == '!')
+	{
+	}
+	// Check for custom emoji
+	else if (message.startsWith("<:"))
+	{
+	}
+	// Check for emoji
+	else if (!isChar(message))
+	{
+	}
+	else
+	{
+		return true
+	}
+	return false
+}
 
 client.on('message', msg => 
 {
@@ -40,57 +95,8 @@ client.on('message', msg =>
 				}
 			}
 			
-			// Start check for anything that doesn't need end punctuation
-			
-			// Check for bot commands
-			if (message.substring(0,1) == '?')
-			{
-				var args = message.substring(1).split(' ');
-				var cmd = args[0];
-				switch(cmd) 
-				{
-					// !ping
-					case 'ping':
-						msg.reply('Pong?')
-							.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
-							.catch(console.error);
-						break;
-					// Just add any case commands if you want to..
-				}
-			}
-			// Check for a mention
-			else if (msg.mentions.channels.array().length > 0 || msg.mentions.members.array().length > 0 || msg.mentions.roles.array().length > 0
-				|| msg.mentions.users.array().length > 0 || msg.mentions.everyone == true)
-			{
-			}
-			// Check for a hyperlink
-			else if (message.includes("https://") || message.includes("http://"))
-			{
-			}
-			// Check for an attachment
-			else if (msg.attachments.array().length > 0)
-			{
-			}
-			// Check for any atypical message
-			else if (msg.type != "DEFAULT")
-			{
-			}
-			// Check for command for other bot
-			else if (message.substring(0,1) == '!')
-			{
-			}
-			// Check for custom emoji
-			else if (message.startsWith("<:"))
-			{
-			}
-			// Check for emoji
-			else if (!isChar(message))
-			{
-			}
-			else
-			{
-				notSentence = false
-			}
+			// Check for anything that doesn't need end punctuation
+			notSentence = !isSentence(msg)
 			
 			//Don't let people @ Rockendude
 			if (msg.mentions.users.find(val => val.username === 'Rockendude') != null)
@@ -100,7 +106,7 @@ client.on('message', msg =>
 				msg.reply("We don't like talking to them.")
 			}
 			
-			//react with Weary when someone joins server
+			//react with weary when someone joins server
 			if (msg.type == "GUILD_MEMBER_JOIN")
 			{
 				msg.react("😩")
