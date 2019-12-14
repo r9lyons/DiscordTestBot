@@ -10,7 +10,7 @@ client.on('ready', () => {
 var punctuation = [ ".", "?", "!", ")"]
 var kickWords = ["codie"]
 var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick", "deadass"]
-var questionWords = ["who", "what", "where", "why", "how"]
+var questionWords = ["who", "what", "where", "why", "how", "whose"]
 var containSwear
 var notSentence
 var byBot
@@ -23,14 +23,14 @@ client.on('message', msg =>
 		if (msg.author.bot == false)
 		{
 			var channel = msg.channel
-			var message = msg.content
+			var message = msg.content.toLowerCase()
 			notSentence = true
 			
 			//check for use a an automatic kick word
 			kickWords.forEach(kickCheck)
 			function kickCheck(item)
 			{
-				if (message.toLowerCase().includes(item))
+				if (message.includes(item))
 				{
 					msg.member.kick()
 					notSentence = true
@@ -91,12 +91,12 @@ client.on('message', msg =>
 				notSentence = false
 			}
 			
-			//Don't let people @ Evan
+			//Don't let people @ Rockendude
 			if (msg.mentions.users.find(val => val.username === 'Rockendude') != null)
 			{
 				msg.delete()
 				msg.deleted = true
-				msg.reply("We don't like talking to him.")
+				msg.reply("We don't like talking to them.")
 			}
 			
 			//react with Weary when someone joins server
@@ -145,10 +145,9 @@ client.on('message', msg =>
 			if (!notSentence && msg.deleted == false)
 			{
 				var lastChar = message.charAt(message.length - 1)
-				var args = message.split(' ');
-				var start = args[0];
-				var startQuestionIndex = questionWords.indexOf(start)
-				if (startQuestionIndex == -1 || lastChar == '?')
+				var question = false
+				questionWords.forEach(function (element){ if(message.startsWith(element)){question = true}});
+				if (!question || lastChar == '?')
 				{
 					var index = punctuation.indexOf(lastChar)
 					if (index == -1)
