@@ -3,7 +3,7 @@
  "version": "1.0.0",
  "description": "Better have an end puctuation",
  "main": "bot.js",
- "author": "Ricky Lyons",
+ "author": "Ricky Lyons, Evan Majerus",
  "scripts": {
   "start": "node bot.js",
   "dev": "nodemon bot.js"
