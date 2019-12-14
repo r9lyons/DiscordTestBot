@@ -62,6 +62,11 @@ function isSentence(msg)
 				}
 				break;
 			}
+			case 'togglegrammar':
+			{
+				msg.reply("Toggling grammar.")
+				break;
+			}
 			// Just add any case commands if you want to..
 		}
 	}
