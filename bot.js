@@ -10,6 +10,7 @@ client.on('ready', () => {
 var punctuation = [ ".", "?", "!", ")"]
 var kickWords = ["codie"]
 var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick", "deadass"]
+var questionWords = ["who", "what", "where", "why", "how"]
 var containSwear
 var notSentence
 var byBot
@@ -24,6 +25,8 @@ client.on('message', msg =>
 			var channel = msg.channel
 			var message = msg.content
 			notSentence = true
+			
+			//check for use a an automatic kick word
 			kickWords.forEach(kickCheck)
 			function kickCheck(item)
 			{
@@ -35,6 +38,10 @@ client.on('message', msg =>
 					msg.reply("has spoken the words never to be spoken...")
 				}
 			}
+			
+			// Start check for anything that doesn't need end punctuation
+			
+			// Check for bot commands
 			if (message.substring(0,1) == '?')
 			{
 				var args = message.substring(1).split(' ');
@@ -50,25 +57,32 @@ client.on('message', msg =>
 					// Just add any case commands if you want to..
 				}
 			}
+			// Check for a mention
 			else if (msg.mentions.channels.array().length > 0 || msg.mentions.members.array().length > 0 || msg.mentions.roles.array().length > 0
 				|| msg.mentions.users.array().length > 0 || msg.mentions.everyone == true)
 			{
 			}
+			// Check for a hyperlink
 			else if (message.includes("https://") || message.includes("http://"))
 			{
 			}
+			// Check for an attachment
 			else if (msg.attachments.array().length > 0)
 			{
 			}
+			// Check for any atypical message
 			else if (msg.type != "DEFAULT")
 			{
 			}
+			// Check for command for other bot
 			else if (message.substring(0,1) == '!')
 			{
 			}
+			// Check for custom emoji
 			else if (message.startsWith("<:"))
 			{
 			}
+			// Check for emoji
 			else if (!isChar(message))
 			{
 			}
@@ -77,17 +91,23 @@ client.on('message', msg =>
 				notSentence = false
 			}
 			
-			if (msg.type == "GUILD_MEMBER_JOIN")
+			//Don't let people @ Evan
+			if (msg.mentions.users.find(val => val.username === 'Rockendude') != null)
 			{
-				var weary = msg.client.emojis.find(emoji => emoji.name == "weary");
-				if (weary)
-				{
-					msg.react(weary.id)
-						.then(console.log)
-						.catch(console.error);
-				}
+				msg.delete()
+				msg.deleted = true
+				msg.reply("We don't like talking to him.")
 			}
 			
+			//react with Weary when someone joins server
+			if (msg.type == "GUILD_MEMBER_JOIN")
+			{
+				msg.react("😩")
+					.then(console.log)
+					.catch(console.error);
+			}
+			
+			//Check for swear words in message
 			swears.forEach(containsSwearWord)
 			function containsSwearWord(item)
 			{
@@ -110,6 +130,7 @@ client.on('message', msg =>
 				}
 			}
 			
+			//handle any foul language found
 			function flagFoulLanguage(item)
 			{
 				letter = item.substring(0,1).toUpperCase()
@@ -120,17 +141,32 @@ client.on('message', msg =>
 				msg.deleted = true
 			}
 			
+			//checks for end punctuation
 			if (!notSentence && msg.deleted == false)
 			{
 				var lastChar = message.charAt(message.length - 1)
-				var index = punctuation.indexOf(lastChar)
-				if (index == -1)
+				var args = message.split(' ');
+				var start = args[0];
+				var startQuestionIndex = questionWords.indexOf(start)
+				if (startQuestionIndex == -1 || lastChar == '?')
+				{
+					var index = punctuation.indexOf(lastChar)
+					if (index == -1)
+					{
+						msg.delete()
+						msg.reply("You must finish your sentences with punctuation.")
+							.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
+							.catch(console.error);
+					}
+				}
+				else
 				{
 					msg.delete()
-					msg.reply("You must finish your sentences with punctuation.")
+					msg.reply("That was a question, it needs to end with a question mark.")
 						.then(sent => console.log(`Sent a reply to ${sent.author.username}`))
 						.catch(console.error);
 				}
+				
 			}
 		}
 	}
