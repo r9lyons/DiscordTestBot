@@ -1,5 +1,0 @@
-1. Swear
-2. End punctuation
-	-Not checked for @s, links, attachments, or special messages
-3. Ping command
-4. Kick words
