@@ -29,7 +29,7 @@ function isChar (str) { if (str.match(/[a-z|A-Z|0-9]/i)) { return true; } return
 
 function bash (username)
 {
-	channel.send(`${username}, ${insults[getRandomInteger(0,4)]}!`)
+	channel.send(`${username}, ${insults[getRandomInteger(0,5)]}!`)
 }
 
 function getRandomInteger(min, max) {
@@ -107,7 +107,7 @@ function runCommand(msg)
 		}
 		case 'bash':
 		{
-			if (msg.mentions.users.find('username', botName) == null)
+			if (msg.mentions.users.find(element => element.username === botName) == null)
 			{
 				bash(args[1])
 			}
