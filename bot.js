@@ -16,7 +16,12 @@ var kickWords = ["codie"]
 var swears = ["fuck", "ass", "shit", "bastard", "bitch", "hell", "cunt", "eric", "love", "piss", "damn", "dick", "deadass",
 	"chucklefuck", "retard", "thundercunt", "knucklefuck", "horseshit", "motherfucker"]
 var questionWords = ["who", "what", "where", "when are", "when is", "when will", "when do", "why", "how", "whose", "is", "will"]
-var insults = ["you fucking suck", "you. are. shit", "fuck off", "you should have been a stain on your parents bed sheets", "coward"]
+var insults = ["you fucking suck", "you. are. shit", "fuck off", "you should have been a stain on your parents bed sheets", "coward",
+				"I bet you suck toes", "you are lucky mirrors can't laugh", "you are the reason the gene pool needs a lifeguard",
+				"you have something on your chin. No, no the 3rd one down", "some day you'll go far and I hope you stay there",
+				"I'd like to kick you in the teeth, but there is no reason for me to improve your looks",
+				"just shut up once", "you look like a before picture", "you are as sharp as a bowling ball",
+				"your parents must be siblings", "you are a few clowns short of a circus"]
 var admins = ["Cyb3rLi0n", "Rockendude"]
 var containSwear
 var notSentence
@@ -29,7 +34,7 @@ function isChar (str) { if (str.match(/[a-z|A-Z|0-9]/i)) { return true; } return
 
 function bash (username)
 {
-	channel.send(`${username}, ${insults[getRandomInteger(0,5)]}!`)
+	channel.send(`${username}, ${insults[getRandomInteger(0,16)]}!`)
 }
 
 function getRandomInteger(min, max) {
