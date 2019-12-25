@@ -4,6 +4,7 @@ const auth = require('./auth.json');
 const readJson = require('./package.json')
 const botTokk = auth.token
 const botName = readJson.name
+const deleteTime = 60000
 
 client.on('ready', () => {
 	censorshipBool = false
@@ -37,7 +38,8 @@ function bash (username)
 	channel.send(`${username}, ${insults[getRandomInteger(0,16)]}!`)
 }
 
-function getRandomInteger(min, max) {
+function getRandomInteger(min, max) 
+{
   return Math.floor(Math.random() * (max - min) ) + min;
 }
 
@@ -46,6 +48,7 @@ function flagFoulLanguage(item, msg)
 {
 	letter = item.substring(0,1).toUpperCase()
 	msg.reply(`That is not appropriate language. Do not use the ${letter}-word in here.`)
+		.then(sent => {sent.delete(deleteTime)})
 		.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 		.catch(console.error);
 	msg.delete()
@@ -169,6 +172,7 @@ client.on('message', msg =>
 					notSentence = true
 					msg.delete()
 					msg.reply("has spoken the words never to be spoken...")
+						.then(sent => {sent.delete(deleteTime)})
 						.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 						.catch(console.error);
 					msg.deleted = true
@@ -189,6 +193,7 @@ client.on('message', msg =>
 						if (index == -1)
 						{
 							msg.reply("You really should finish your sentences with punctuation.")
+								.then(sent => {sent.delete(deleteTime)})
 								.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 								.catch(console.error);
 						}
@@ -196,6 +201,7 @@ client.on('message', msg =>
 					else
 					{
 						msg.reply("That was a question, it needs to end with a question mark.")
+							.then(sent => {sent.delete(deleteTime)})
 							.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 							.catch(console.error);
 					}
@@ -214,6 +220,7 @@ client.on('message', msg =>
 			if (msg.mentions.users.find(val => val.username === 'Tannerith') != null)
 			{
 				msg.reply("We don't like talking to them.")
+					.then(sent => {sent.delete(deleteTime)})
 					.then(sent => console.log(`Sent a reply to ${msg.author.username}`))
 					.catch(console.error);
 			}
