@@ -2,6 +2,8 @@ const Discord = require('discord.js')
 const client = new Discord.Client()
 const auth = require('./auth.json');
 const readJson = require('./package.json')
+const tube = require('./tube.js')
+const ytdl = require('ytdl-core')
 const botTokk = auth.token
 const botName = readJson.name
 
@@ -24,6 +26,7 @@ var byBot
 var channel
 var grammarBool
 var censorshipBool
+const queue = new Map();
 
 function isChar (str) { if (str.match(/[a-z|A-Z|0-9]/i)) { return true; } return false; }
 
@@ -140,6 +143,10 @@ function runCommand(msg)
 					.catch(console.error);
 			}
 			break;
+		}
+		case 'test':
+		{
+			tube.execute(msg, queue.get(msg.guild.id))
 		}
 		// Just add any case commands if you want to..
 	}
